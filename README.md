@@ -1,30 +1,31 @@
-# 📡 Sync Echo
+# 📚 EchoSync (by ReverseIt)
 
-> **Stop manual syncing. Start echoing.** > A high-performance, real-time synchronization engine designed to keep your workspaces in perfect harmony.
+> **"Your reading journey, amplified."**
 
----
-
-## ⚡ The Vibe
-**Sync Echo** is a lightweight tool that watches your local environment and "echoes" every change to your target destination instantly. No more "wait, did I upload that?" anxiety. It’s fast, invisible, and just works.
-
-## ✨ Features
-* **Instant Mirroring:** Real-time file system monitoring.
-* **Bi-directional Support:** Keep two folders in sync, not just one-way.
-* **Smart Ignore:** Automatically skips `.git`, `node_modules`, and other junk.
-* **Low Battery Impact:** Optimized to stay quiet in the background.
+**EchoSync** is the ultimate social layer for your digital and physical library. Built during the **ReverseIt Hackathon**, it transforms the solitary act of reading into a synchronized community experience. Think Goodreads, but faster, prettier, and built for the next gen of readers.
 
 ---
 
-## 🚀 Quick Start
+## 🌟 The Vision
+Most book trackers feel like spreadsheets from 2005. **EchoSync** reverses that. We focused on:
+* **Live Echoes:** Share what you're reading *as you read it*, not just when you finish.
+* **Progress Sync:** Seamlessly track pages across Kindle, physical books, and audiobooks.
+* **Social Discovery:** Find your next obsession based on what your circle is actually highlighting right now.
 
-### Installation
-Get the package cloned and ready to go:
-```bash
-# Clone the repo
-git clone [https://github.com/YourUsername/sync-echo.git](https://github.com/YourUsername/sync-echo.git)
+---
 
-# Move into the project
-cd sync-echo
+## ✨ Core Features
+* **📖 Real-Time Tracking:** A sleek dashboard to update your current page count in seconds.
+* **🎧 Multi-Format Harmony:** Sync progress between your physical copies and audiobooks flawlessly.
+* **💬 Narrative Echoes:** Leave "spatial notes" on specific chapters for your friends to find when they reach that part.
+* **📈 Reading Insights:** Beautifully visualized data of your reading habits (we love a good graph).
 
-# Install the goods
-npm install
+---
+
+## 🛠️ Tech Stack
+* **Frontend:** Flutter / React (Fast, responsive, aesthetic)
+* **Backend:** FastAPI / Python (For that snappy data syncing)
+* **Database:** PostgreSQL (Keeping your library safe)
+* **API:** Integration with Google Books & OpenLibrary
+
+---
