@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../services/book_service.dart';
 import '../services/crypto_service.dart';
 import '../services/storage_service.dart';
@@ -21,6 +22,7 @@ class ReadingScreen extends StatefulWidget {
 class _ReadingScreenState extends State<ReadingScreen> {
   int _currentPage = 1;
   late WebRTCService _webRTCService;
+  final PdfViewerController _pdfViewerController = PdfViewerController();
   bool _isConnected = false;
   final _noteController = TextEditingController();
 
@@ -212,40 +214,28 @@ class _ReadingScreenState extends State<ReadingScreen> {
               children: [
                 // Reading Area
                 Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (widget.book.coverUrl.isNotEmpty)
-                          Hero(
-                            tag: 'cover_${widget.book.title}',
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.network(widget.book.coverUrl, height: 200, fit: BoxFit.cover),
-                            ).animate().fade().scale(delay: 200.ms),
-                          ),
-                        const SizedBox(height: 32),
-                        Text(
-                          'Page $_currentPage',
-                          style: const TextStyle(fontSize: 48, fontWeight: FontWeight.w200, color: Colors.white, letterSpacing: -2),
-                        ).animate(key: ValueKey(_currentPage)).fadeIn().slideY(begin: 0.1, end: 0),
-                        const SizedBox(height: 8),
-                        Text(
-                          '${((_currentPage / widget.book.pageCount) * 100).toStringAsFixed(1)}% Completed',
-                          style: TextStyle(color: Colors.white.withOpacity(0.5)),
-                        ),
-                        const SizedBox(height: 24),
-                        SizedBox(
-                          width: 250,
-                          child: LinearProgressIndicator(
-                            value: _currentPage / widget.book.pageCount,
-                            backgroundColor: Colors.white.withOpacity(0.1),
-                            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF06B6D4)),
-                            minHeight: 6,
-                            borderRadius: BorderRadius.circular(10),
-                          ).animate().scaleX(alignment: Alignment.centerLeft),
-                        ),
-                      ],
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                         BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 20)
+                      ]
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: SfPdfViewer.asset(
+                      'assets/harry_potter.pdf',
+                      controller: _pdfViewerController,
+                      canShowScrollHead: false,
+                      pageLayoutMode: PdfPageLayoutMode.single,
+                      onPageChanged: (PdfPageChangedDetails details) {
+                        if (mounted) {
+                          setState(() {
+                            _currentPage = details.newPageNumber;
+                          });
+                          _loadAnnotations();
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -317,8 +307,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
                     children: [
                       IconButton(
                         onPressed: _currentPage > 1 ? () {
-                          setState(() => _currentPage--);
-                          _loadAnnotations();
+                          _pdfViewerController.previousPage();
                         } : null,
                         icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
                         style: IconButton.styleFrom(backgroundColor: Colors.white.withOpacity(0.1)),
@@ -339,10 +328,9 @@ class _ReadingScreenState extends State<ReadingScreen> {
                         ).animate().scale(delay: 500.ms).shimmer(duration: 2.seconds, delay: 1.seconds),
                       ),
                       IconButton(
-                        onPressed: _currentPage < widget.book.pageCount ? () {
-                          setState(() => _currentPage++);
-                          _loadAnnotations();
-                        } : null,
+                        onPressed: () {
+                          _pdfViewerController.nextPage();
+                        },
                         icon: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),
                         style: IconButton.styleFrom(backgroundColor: Colors.white.withOpacity(0.1)),
                       ),
@@ -418,6 +406,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
   void dispose() {
     _webRTCService.dispose();
     _noteController.dispose();
+    _pdfViewerController.dispose();
     super.dispose();
   }
 }
